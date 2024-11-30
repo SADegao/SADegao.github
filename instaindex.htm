@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruleta Magica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #282c34;
+            color: white;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .color-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .color-buttons button {
+            font-size: 18px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            color: white;
+        }
+        .red { background-color: #FF4C4C; }
+        .orange { background-color: #FFA500; }
+        .yellow { background-color: #FFFF00; color: black; }
+        .green { background-color: #32CD32; }
+        .blue { background-color: #4682B4; }
+        .pink { background-color: #FF69B4; }
+        .purple { background-color: #800080; }
+        #spinButton {
+            font-size: 20px;
+            padding: 10px 30px;
+            margin-top: 20px;
+        }
+        #result, #mission {
+            margin-top: 30px;
+            font-size: 22px;
+        }
+        #timer {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Ruleta Magica</h1>
+
+    <div class="color-buttons">
+        <button class="red" onclick="spinRoulette('rojo')">Rojo</button>
+        <button class="orange" onclick="spinRoulette('naranja')">Naranja</button>
+        <button class="yellow" onclick="spinRoulette('amarillo')">Amarillo</button>
+        <button class="green" onclick="spinRoulette('verde')">Verde</button>
+        <button class="blue" onclick="spinRoulette('azul')">Azul</button>
+        <button class="pink" onclick="spinRoulette('rosa')">Rosa</button>
+        <button class="purple" onclick="spinRoulette('morado')">Morado</button>
+    </div>
+
+    <button id="spinButton" onclick="startSpin()">Girar Ruleta!</button>
+    <p id="timer" class="hidden"></p>
+    <div id="result"></div>
+    <div id="mission"></div>
+
+    <script>
+        const rewards = {
+            rojo: [
+                { text: "Regeneracion II por un dia", chance: 40 },
+                { text: "+2 corazones extras", chance: 5 },
+                { text: "Totem de inmortalidad", chance: 1 },
+                { text: "Regeneracion I por un dia", chance: 54 }
+            ],
+            naranja: [
+                { text: "Fuerza I por un dia", chance: 50 },
+                { text: "Fuerza II por un dia", chance: 30 },
+                { text: "Encantamiento de Fuerza (I o II)", chance: 10 },
+                { text: "Resistencia II por un dia", chance: 10 }
+            ],
+            amarillo: [
+                { text: "Arco con encantamiento aleatorio", chance: 70 },
+                { text: "Glow a todos los jugadores durante un dia", chance: 30 }
+            ],
+            verde: [
+                { text: "Manzana dorada (1-5)", chance: 30 },
+                { text: "Pocion de regeneracion instantanea (I o II)", chance: 30 },
+                { text: "Manzana Dorada Encantada", chance: 5 },
+                { text: "Stack de comida random", chance: 25 },
+                { text: "Encantamiento de reparacion", chance: 1 },
+                { text: "Objeto magico", chance: 9 }
+            ],
+            azul: [
+                { text: "Prisa Minera I-II", chance: 40 },
+                { text: "Pico con fortuna (I-III)", chance: 20 },
+                { text: "Vision nocturna durante un dia", chance: 30 },
+                { text: "Un bloque de mineral aleatorio", chance: 10 }
+            ],
+            rosa: [
+                { text: "Objeto magico", chance: 25 },
+                { text: "Creas un evento magico", chance: 25 },
+                { text: "El arbol magico te regala algo", chance: 25 },
+                { text: "Manzana dorada (1-3)", chance: 25 }
+            ],
+            morado: [
+                { text: "Invisibilidad durante 1 hora", chance: 25 },
+                { text: "Recompensa de otra ruleta", chance: 25 },
+                { text: "Glow a un jugador que quieras", chance: 25 },
+                { text: "Ubicacion de un jugador muerto", chance: 25 }
+            ]
+        };
+
+        function spinRoulette(color) {
+            const options = rewards[color];
+            const totalChance = options.reduce((acc, curr) => acc + curr.chance, 0);
+            const random = Math.floor(Math.random() * totalChance);
+            let cumulativeChance = 0;
+
+            for (let i = 0; i < options.length; i++) {
+                cumulativeChance += options[i].chance;
+                if (random < cumulativeChance) {
+                    document.getElementById('result').innerText = `Has ganado: ${options[i].text}`;
+                    break;
+                }
+            }
+
+            if (color === "azul") {
+                displayMission();
+            } else {
+                document.getElementById('mission').innerText = "";
+            }
+        }
+
+        function displayMission() {
+            const missions = [
+                "Recolecta 64 bloques de piedra.",
+                "Caza 10 zombies.",
+                "Encuentra 5 diamantes.",
+                "Construye una casa con madera de roble.",
+                "Captura 5 peces."
+            ];
+            const randomMission = missions[Math.floor(Math.random() * missions.length)];
+            document.getElementById('mission').innerText = `Mision: ${randomMission}`;
+        }
+    </script>
+
+</body>
+</html>
